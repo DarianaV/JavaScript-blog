@@ -1,8 +1,9 @@
 const userController = require('./../controllers/user');
 const homeController = require('./../controllers/home');
-const adminController = require('./../controllers/admin/admin')
+const adminController = require('./../controllers/admin/admin');
 const articleController = require('./../controllers/article');
 const tagController = require('./../controllers/tag');
+const postController=require('./../controllers/post');
 
 module.exports = (app) => {
     app.get('/', homeController.index);
@@ -59,5 +60,7 @@ module.exports = (app) => {
 
     app.get('/admin/category/delete/:id', adminController.category.deleteGet);
     app.post('/admin/category/delete/:id', adminController.category.deletePost);
+
+    app.post('/article/details/:id',postController.commentPost);
 };
 

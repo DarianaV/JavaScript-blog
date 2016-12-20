@@ -6,6 +6,7 @@ let articleSchmea = mongoose.Schema({
     author: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     category: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Category' },
     tags: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref:'Tag' }],
+    comment:[{ type: mongoose.Schema.Types.ObjectId, required: true, ref:'Post' }],
     date: { type: Date, default: Date.now() }
 });
 

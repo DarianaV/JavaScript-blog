@@ -19,6 +19,7 @@ module.exports = (config) => {
     require('./../models/Category');
     require('./../models/Article');
     require('./../models/Tag');
+    require('./../models/Post');
 };
 
 

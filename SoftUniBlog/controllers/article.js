@@ -1,7 +1,7 @@
 const Article = require('mongoose').model('Article');
 const Category = require('mongoose').model('Category');
 const initializeTags = require('./../models/Tag').initializeTags;
-
+const Post = require('mongoose').model('Post');
 module.exports = {
     createGet: (req, res) => {
         if (!req.isAuthenticated()) {
@@ -36,7 +36,9 @@ module.exports = {
         articleArgs.author = req.user.id;
         articleArgs.tags = [];
         Article.create(articleArgs).then(article => {
-            let tagNames = articleArgs.tagNames.split(/\s+|,/).filter(tag => {return tag});
+            let tagNames = articleArgs.tagNames.split(/\s+|,/).filter(tag => {
+                return tag
+            });
             initializeTags(tagNames, article.id);
 
             article.prepareInsert();
@@ -47,17 +49,28 @@ module.exports = {
         let id = req.params.id;
         Article.findById(id).populate('author tags').then(article => {
             if (!req.user) {
-                res.render('article/details', { article: article, isUserAuthorized: false});
+                res.render('article/details', {article: article, isUserAuthorized: false});
                 return;
             }
 
             req.user.isInRole('Admin').then(isAdmin => {
                 let isUserAuthorized = isAdmin || req.user.isAuthor(article);
 
-                res.render('article/details', { article: article, isUserAuthorized: isUserAuthorized});
+                res.render('article/details', {article: article, isUserAuthorized: isUserAuthorized});
+
+                //let id = req.params.id;
+                //let posts=[];
+                //Post.find({}).then(post=> {
+                 // if(id===post.article){
+                 //     posts.push(id);
+                 // }
+                 // res.render('article/details',post.posts);
+               //})
             });
+
         });
     },
+
     editGet: (req, res) => {
         let id = req.params.id;
 
@@ -78,7 +91,9 @@ module.exports = {
                 Category.find({}).then(categories => {
                     article.categories = categories;
 
-                    article.tagNames = article.tags.map(tag => {return tag.name});
+                    article.tagNames = article.tags.map(tag => {
+                        return tag.name
+                    });
                     res.render('article/edit', article);
                 });
             });
@@ -117,10 +132,12 @@ module.exports = {
                 article.title = articleArgs.title;
                 article.content = articleArgs.content;
 
-                let newTagNames = articleArgs.tags.split(/\s+|,/).filter(tag => {return tag});
+                let newTagNames = articleArgs.tags.split(/\s+|,/).filter(tag => {
+                    return tag
+                });
 
                 let oldTags = article.tags.filter(tag => {
-                   return newTagNames.indexOf(tag.name) === -1;
+                    return newTagNames.indexOf(tag.name) === -1;
                 });
 
                 for (let tag of oldTags) {
@@ -131,18 +148,18 @@ module.exports = {
                 initializeTags(newTagNames, article.id);
 
                 /*article.save((err) => {
-                    if (err) {
-                        console.log(err.message)
-                    }*/
+                 if (err) {
+                 console.log(err.message)
+                 }*/
 
-                    Category.findById(article.category).then(category => {
-                        if (category.articles.indexOf(article.id) === -1) {
-                            category.articles.push(article.id);
-                            category.save();
-                        }
+                Category.findById(article.category).then(category => {
+                    if (category.articles.indexOf(article.id) === -1) {
+                        category.articles.push(article.id);
+                        category.save();
+                    }
 
-                        res.redirect(`/article/details/${id}`);
-                    });
+                    res.redirect(`/article/details/${id}`);
+                });
                 /*});*/
             });
         }
@@ -166,7 +183,9 @@ module.exports = {
                     return;
                 }
 
-                article.tagNames = article.tags.map(tag => {return tag.name});
+                article.tagNames = article.tags.map(tag => {
+                    return tag.name
+                });
                 res.render('article/delete', article);
             });
         });
@@ -186,5 +205,7 @@ module.exports = {
             article.prepareDelete();
             res.redirect('/');
         })
-    }
+    },
+
+
 };
